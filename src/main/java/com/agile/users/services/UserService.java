@@ -1,6 +1,6 @@
 package com.agile.users.services;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,7 +69,7 @@ public class UserService implements IUserService {
     updatedUser.setName(user.getName());
     updatedUser.setEmail(user.getEmail());
     updatedUser.setAccessLevel(user.getAccessLevel());
-    updatedUser.setUpdatedAt(Instant.now());
+    updatedUser.setUpdatedAt(new Date());
 
     this.messagingService.send(updatedUser, USER_UPDATED_QUEUE_RK);
     return this.userRepository.save(updatedUser);
