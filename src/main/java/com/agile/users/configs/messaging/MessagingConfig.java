@@ -27,7 +27,7 @@ public class MessagingConfig {
   @Value("${messaging.user-updated-queue}")
   private String USER_UPDATED_QUEUE;
 
-  @Value("${messaging.user-created-queue-rk}")
+  @Value("${messaging.user-updated-queue-rk}")
   private String USER_UPDATED_QUEUE_RK;
 
   @Bean

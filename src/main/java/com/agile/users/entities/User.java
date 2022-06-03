@@ -13,7 +13,6 @@ import javax.persistence.Table;
 
 import com.agile.users.entities.data.UserAccessLevel;
 
-
 import lombok.Data;
 
 @Data

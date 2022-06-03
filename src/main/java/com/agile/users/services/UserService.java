@@ -25,7 +25,7 @@ public class UserService implements IUserService {
   @Value("${messaging.user-created-queue-rk}")
   private String USER_CREATED_QUEUE_RK;
 
-  @Value("${messaging.user-created-queue-rk}")
+  @Value("${messaging.user-updated-queue-rk}")
   private String USER_UPDATED_QUEUE_RK;
 
   public List<User> listAll() {
