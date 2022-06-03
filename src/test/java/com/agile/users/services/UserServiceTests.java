@@ -28,6 +28,9 @@ public class UserServiceTests {
   @MockBean
   private UserRepository userRepository;
 
+  @MockBean
+  private MessagingService messagingService;
+
   @Autowired
   private UserService userService;
 

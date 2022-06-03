@@ -11,12 +11,22 @@ import com.agile.users.services.exceptions.NotFoundException;
 import com.agile.users.services.interfaces.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements IUserService {
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private MessagingService messagingService;
+
+  @Value("${messaging.user-created-queue-rk}")
+  private String USER_CREATED_QUEUE_RK;
+
+  @Value("${messaging.user-created-queue-rk}")
+  private String USER_UPDATED_QUEUE_RK;
 
   public List<User> listAll() {
     List<User> users = this.userRepository.findAll();
@@ -40,6 +50,7 @@ public class UserService implements IUserService {
       throw new DuplicatedDocumentException(message);
     }
     User newUser = this.userRepository.save(user);
+    this.messagingService.send(newUser, USER_CREATED_QUEUE_RK);
     return newUser;
   }
 
@@ -59,6 +70,8 @@ public class UserService implements IUserService {
     updatedUser.setEmail(user.getEmail());
     updatedUser.setAccessLevel(user.getAccessLevel());
     updatedUser.setUpdatedAt(Instant.now());
+
+    this.messagingService.send(updatedUser, USER_UPDATED_QUEUE_RK);
     return this.userRepository.save(updatedUser);
   }
 }
