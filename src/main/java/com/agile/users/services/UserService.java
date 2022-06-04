@@ -22,11 +22,11 @@ public class UserService implements IUserService {
   @Autowired
   private MessagingService messagingService;
 
-  @Value("${messaging.user-created-queue-rk}")
-  private String USER_CREATED_QUEUE_RK;
+  @Value("${messaging.user-created-rk}")
+  private String userCreatedRoutingKey;
 
-  @Value("${messaging.user-updated-queue-rk}")
-  private String USER_UPDATED_QUEUE_RK;
+  @Value("${messaging.user-updated-rk}")
+  private String userUpdatedRoutingKey;
 
   public List<User> listAll() {
     List<User> users = this.userRepository.findAll();
@@ -50,7 +50,7 @@ public class UserService implements IUserService {
       throw new DuplicatedDocumentException(message);
     }
     User newUser = this.userRepository.save(user);
-    this.messagingService.send(newUser, USER_CREATED_QUEUE_RK);
+    this.messagingService.send(newUser, this.userCreatedRoutingKey);
     return newUser;
   }
 
@@ -71,7 +71,7 @@ public class UserService implements IUserService {
     updatedUser.setAccessLevel(user.getAccessLevel());
     updatedUser.setUpdatedAt(new Date());
 
-    this.messagingService.send(updatedUser, USER_UPDATED_QUEUE_RK);
+    this.messagingService.send(updatedUser, this.userUpdatedRoutingKey);
     return this.userRepository.save(updatedUser);
   }
 }

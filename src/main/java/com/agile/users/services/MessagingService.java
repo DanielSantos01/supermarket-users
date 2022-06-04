@@ -11,12 +11,12 @@ import com.agile.users.services.interfaces.IMessagingService;
 @Service
 public class MessagingService implements IMessagingService {
   @Value("${messaging.exchange-name}")
-  private String EXCHANGE_NAME;
+  private String exchangeName;
 
   @Autowired
   private RabbitTemplate template;
 
   public void send(User user, String to) {
-    this.template.convertAndSend(EXCHANGE_NAME, to, user);
+    this.template.convertAndSend(this.exchangeName, to, user);
   }
 }

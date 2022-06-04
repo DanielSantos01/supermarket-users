@@ -27,6 +27,7 @@ public class TestConfig implements CommandLineRunner {
   }
 
   private void createUsers() {
+    /*
     User user1 = new User(
       "Agile",
       "agilesolutions@domain.com",
@@ -40,5 +41,6 @@ public class TestConfig implements CommandLineRunner {
       UserAccessLevel.CASHIER
     );
     this.userRepository.saveAll(Arrays.asList(user1, user2));
+    */
   }
 }
