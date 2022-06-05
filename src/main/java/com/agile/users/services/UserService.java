@@ -57,15 +57,19 @@ public class UserService implements IUserService {
   }
 
   public User update(User user) {
-    User old = this.findById(user.getId());
+    User reference = this.findById(user.getId());
     Optional<User> previous = this.userRepository.findByName(user.getName());
-    if (previous.isPresent() && previous.get().getId() != old.getId()) {
+    if (previous.isPresent() && previous.get().getId() != reference.getId()) {
       String message = String.format("An user with name %s already exists", user.getName());
       throw new DuplicatedDocumentException(message);
     }
 
-    user.setUpdatedAt(new Date());
-    this.messagingService.notifyUserUpdate(user);
-    return this.userRepository.save(user);
+    reference.setName(user.getName());
+    reference.setAccessLevel(user.getAccessLevel());
+    reference.setEmail(user.getEmail());
+    reference.setUpdatedAt(new Date());
+    this.userRepository.save(reference);
+    this.messagingService.notifyUserUpdate(reference);
+    return reference;
   }
 }
