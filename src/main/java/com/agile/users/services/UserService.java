@@ -39,7 +39,7 @@ public class UserService implements IUserService {
     return user;
   }
 
-  public User create(User user) {
+  public User create(User user) throws DuplicatedDocumentException {
     Optional<User> previous = this.userRepository.findByName(user.getName());
     if (previous.isPresent()) {
       String message = String.format("An user with name %s already exists", user.getName());
@@ -56,7 +56,7 @@ public class UserService implements IUserService {
     return user;
   }
 
-  public User update(User user) {
+  public User update(User user) throws NotFoundException, DuplicatedDocumentException {
     User reference = this.findById(user.getId());
     Optional<User> previous = this.userRepository.findByName(user.getName());
     if (previous.isPresent() && previous.get().getId() != reference.getId()) {
