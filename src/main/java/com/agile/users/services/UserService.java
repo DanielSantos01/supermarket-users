@@ -1,4 +1,3 @@
-/*
 package com.agile.users.services;
 
 import java.util.Date;
@@ -31,13 +30,12 @@ public class UserService implements IUserService {
   }
 
   public User findById(long id) throws NotFoundException {
-    User user = this.userRepository
-      .findById(id)
-      .orElseThrow(() -> {
-        String message = String.format("No user was found with id %d", id);
-        throw new NotFoundException(message);
-      });
-    return user;
+    Optional<User> user = this.userRepository.findById(id);
+    if(!user.isPresent()) {
+      String message = String.format("No user was found with id %d", id);
+      throw new NotFoundException(message);
+    }
+    return user.get();
   }
 
   public User create(User user) throws DuplicatedDocumentException {
@@ -74,4 +72,3 @@ public class UserService implements IUserService {
     return reference;
   }
 }
-*/

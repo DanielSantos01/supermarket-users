@@ -1,4 +1,3 @@
-/*
 package com.agile.users.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -165,4 +164,3 @@ public class UserControllerTests {
     assertEquals(mapper.readValue(result.getResponse().getContentAsString(), User.class), user);
   }
 }
-*/
