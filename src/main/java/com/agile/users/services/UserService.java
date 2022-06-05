@@ -29,7 +29,7 @@ public class UserService implements IUserService {
     return users;
   }
 
-  public User findById(long id) {
+  public User findById(long id) throws NotFoundException {
     User user = this.userRepository
       .findById(id)
       .orElseThrow(() -> {
