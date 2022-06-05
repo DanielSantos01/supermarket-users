@@ -11,4 +11,8 @@ public class EncryptService implements IEncryptService {
   public PasswordEncoder getEncoder() {
     return new BCryptPasswordEncoder();
   }
+
+  public String encode(String value) {
+    return new BCryptPasswordEncoder().encode(value);
+  }
 }

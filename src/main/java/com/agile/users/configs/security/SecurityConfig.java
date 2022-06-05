@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private UserDetailService userDetailService;
 
   @Autowired
-  private EncryptService encryptServices;
+  private EncryptService encryptService;
 
   @Value("${security.jwt.expiration-time}")
   private long tokenExpirationTime;
@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(this.userDetailService).passwordEncoder(this.encryptServices.getEncoder());
+    auth.userDetailsService(this.userDetailService).passwordEncoder(this.encryptService.getEncoder());
   }
 
   @Override

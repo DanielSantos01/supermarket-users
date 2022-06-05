@@ -13,10 +13,20 @@ public class MessagingService implements IMessagingService {
   @Value("${messaging.exchange-name}")
   private String exchangeName;
 
+  @Value("${messaging.user-created-rk}")
+  private String userCreatedRoutingKey;
+
+  @Value("${messaging.user-updated-rk}")
+  private String userUpdatedRoutingKey;
+
   @Autowired
   private RabbitTemplate template;
 
-  public void send(User user, String to) {
-    this.template.convertAndSend(this.exchangeName, to, user);
+  public void notifyUserCreation(User user) {
+    this.template.convertAndSend(this.exchangeName, this.userCreatedRoutingKey, user);
+  }
+
+  public void notifyUserUpdate(User user) {
+    this.template.convertAndSend(this.exchangeName, this.userUpdatedRoutingKey, user);
   }
 }

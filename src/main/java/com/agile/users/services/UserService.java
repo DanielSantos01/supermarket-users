@@ -11,7 +11,6 @@ import com.agile.users.services.exceptions.NotFoundException;
 import com.agile.users.services.interfaces.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,13 +19,10 @@ public class UserService implements IUserService {
   private UserRepository userRepository;
 
   @Autowired
+  private EncryptService encryptService;
+
+  @Autowired
   private MessagingService messagingService;
-
-  @Value("${messaging.user-created-rk}")
-  private String userCreatedRoutingKey;
-
-  @Value("${messaging.user-updated-rk}")
-  private String userUpdatedRoutingKey;
 
   public List<User> listAll() {
     List<User> users = this.userRepository.findAll();
@@ -49,8 +45,9 @@ public class UserService implements IUserService {
       String message = String.format("An user with name %s already exists", user.getName());
       throw new DuplicatedDocumentException(message);
     }
+    user.setPassword(this.encryptService.encode(user.getPassword()));
     User newUser = this.userRepository.save(user);
-    this.messagingService.send(newUser, this.userCreatedRoutingKey);
+    this.messagingService.notifyUserCreation(newUser);
     return newUser;
   }
 
@@ -60,18 +57,15 @@ public class UserService implements IUserService {
   }
 
   public User update(User user) {
+    User old = this.findById(user.getId());
     Optional<User> previous = this.userRepository.findByName(user.getName());
-    if (previous.isPresent()) {
+    if (previous.isPresent() && previous.get().getId() != old.getId()) {
       String message = String.format("An user with name %s already exists", user.getName());
       throw new DuplicatedDocumentException(message);
     }
-    User updatedUser = this.findById(user.getId());
-    updatedUser.setName(user.getName());
-    updatedUser.setEmail(user.getEmail());
-    updatedUser.setAccessLevel(user.getAccessLevel());
-    updatedUser.setUpdatedAt(new Date());
 
-    this.messagingService.send(updatedUser, this.userUpdatedRoutingKey);
-    return this.userRepository.save(updatedUser);
+    user.setUpdatedAt(new Date());
+    this.messagingService.notifyUserUpdate(user);
+    return this.userRepository.save(user);
   }
 }

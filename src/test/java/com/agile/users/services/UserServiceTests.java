@@ -31,6 +31,9 @@ public class UserServiceTests {
   @MockBean
   private MessagingService messagingService;
 
+  @MockBean
+  private EncryptService encryptService;
+
   @Autowired
   private UserService userService;
 

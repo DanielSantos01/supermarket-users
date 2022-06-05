@@ -6,4 +6,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IEncryptService {
   public PasswordEncoder getEncoder();
+  public String encode(String value);
 }

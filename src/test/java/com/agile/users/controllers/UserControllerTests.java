@@ -84,6 +84,7 @@ public class UserControllerTests {
   @WithMockUser(username="ADMIN")
   @Test
   public void listByExistentId() throws Exception {
+    ObjectMapper mapper = new ObjectMapper();
     User user = new User("Agile", "agile@domain.com", "agile_admin", UserAccessLevel.ADMIN);
     user.setId(1L);
 
@@ -92,7 +93,7 @@ public class UserControllerTests {
     MvcResult result = this.mvc.perform(request).andReturn();
 
     assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-    assertNotNull(result.getResponse().getContentAsString());
+    assertEquals(mapper.readValue(result.getResponse().getContentAsString(), User.class), user);
   }
 
   @Test
@@ -122,7 +123,7 @@ public class UserControllerTests {
     MvcResult result = this.mvc.perform(request).andReturn();
 
     assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
-    assertNotNull(result.getResponse().getContentAsString());
+    assertEquals(mapper.readValue(result.getResponse().getContentAsString(), User.class), user);
   }
 
   @Test
@@ -160,6 +161,6 @@ public class UserControllerTests {
     MvcResult result = this.mvc.perform(request).andReturn();
 
     assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-    assertNotNull(result.getResponse().getContentAsString());
+    assertEquals(mapper.readValue(result.getResponse().getContentAsString(), User.class), user);
   }
 }
