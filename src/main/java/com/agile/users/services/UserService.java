@@ -1,6 +1,6 @@
 package com.agile.users.services;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,12 +11,22 @@ import com.agile.users.services.exceptions.NotFoundException;
 import com.agile.users.services.interfaces.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements IUserService {
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private MessagingService messagingService;
+
+  @Value("${messaging.user-created-rk}")
+  private String userCreatedRoutingKey;
+
+  @Value("${messaging.user-updated-rk}")
+  private String userUpdatedRoutingKey;
 
   public List<User> listAll() {
     List<User> users = this.userRepository.findAll();
@@ -40,6 +50,7 @@ public class UserService implements IUserService {
       throw new DuplicatedDocumentException(message);
     }
     User newUser = this.userRepository.save(user);
+    this.messagingService.send(newUser, this.userCreatedRoutingKey);
     return newUser;
   }
 
@@ -58,7 +69,9 @@ public class UserService implements IUserService {
     updatedUser.setName(user.getName());
     updatedUser.setEmail(user.getEmail());
     updatedUser.setAccessLevel(user.getAccessLevel());
-    updatedUser.setUpdatedAt(Instant.now());
+    updatedUser.setUpdatedAt(new Date());
+
+    this.messagingService.send(updatedUser, this.userUpdatedRoutingKey);
     return this.userRepository.save(updatedUser);
   }
 }

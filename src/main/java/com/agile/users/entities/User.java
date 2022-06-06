@@ -1,7 +1,6 @@
 package com.agile.users.entities;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.agile.users.entities.data.UserAccessLevel;
-
 
 import lombok.Data;
 
@@ -40,10 +38,10 @@ public class User implements Serializable {
   private Integer accessLevel;
 
   @Column(nullable = false)
-  private final Instant createdAt = Instant.now();
+  private final Date createdAt = new Date();
 
   @Column(nullable = false)
-  private Instant updatedAt = Instant.now();
+  private Date updatedAt = new Date();
 
   public User() {
     this.accessLevel = UserAccessLevel.CASHIER.getCode();
@@ -65,13 +63,5 @@ public class User implements Serializable {
 
   public void setAccessLevel(UserAccessLevel accessLevel) {
     this.accessLevel = accessLevel.getCode();
-  }
-
-  public Date getUpdatedAt() {
-    return Date.from(this.updatedAt);
-  }
-
-  public Date getCreatedAt() {
-    return Date.from(this.createdAt);
   }
 }
