@@ -18,14 +18,17 @@ an admin user created, but only specific persons have access to it.
 
 ### Data structure
 When you see User as return param of the route, notice that we are talking about this structure:
+###### Note: properties marked with * are uniques.
 
 ##### USER
 ```
 {
-  name: string;
+  name: string;*
   email: string;
   password: string;
   accessLevel: ENUM(CASHIER, ADMIN);
+  createdAt: Date;
+  updatedAt: Date;
 }
 ```
 
