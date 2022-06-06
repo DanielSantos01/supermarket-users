@@ -34,4 +34,5 @@ build/
 
 
 ### General ##
-*.properties
+application-dev.properties
+application-test.properties
